@@ -1,4 +1,3 @@
-
 :root {
   font-family: Arial, sans-serif;
   color: #222;
@@ -39,7 +38,8 @@ nav li {
   cursor: pointer;
 }
 
-h1, p {
+h1,
+p {
   text-align: center;
   color: #222;
 }
@@ -53,6 +53,10 @@ h1, p {
   padding: 22px 7%;
   background: #ffffff;
   border-bottom: 1px solid #eeeae3;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
 }
 
 .logo {
@@ -326,7 +330,9 @@ h1, p {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .menu-card:hover {
@@ -383,7 +389,6 @@ h1, p {
     font-size: 30px;
   }
 }
-
 
 /* ==============================
    PROFESSIONAL FOOTER
@@ -553,7 +558,6 @@ h1, p {
   }
 }
 
-
 /* =================================
    GLOBAL WEBSITE IMPROVEMENTS
 ================================= */
@@ -681,7 +685,6 @@ p {
     font-size: 27px;
   }
 }
-
 
 /* CHECKOUT SECTION */
 
@@ -1376,7 +1379,9 @@ p {
   padding: 30px;
   border-radius: 12px;
   border: 1px solid #eeeae2;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .testimonial-card:hover {
@@ -1530,11 +1535,7 @@ p {
   flex-direction: column;
   justify-content: flex-end;
   padding: 25px;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.75),
-    transparent 70%
-  );
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 70%);
   color: white;
 }
 
@@ -2090,7 +2091,7 @@ p {
 ===================================== */
 
 .gallery-section {
-  background: #F8F5EF;
+  background: #f8f5ef;
   padding: 85px 20px;
 }
 
@@ -2106,7 +2107,7 @@ p {
 
 .gallery-subtitle {
   display: inline-block;
-  color: #B58A45;
+  color: #b58a45;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 4px;
@@ -2121,7 +2122,7 @@ p {
 }
 
 .gallery-heading p {
-  color: #77716A;
+  color: #77716a;
   font-size: 16px;
   line-height: 1.8;
   max-width: 650px;
@@ -2141,8 +2142,10 @@ p {
   cursor: pointer;
   background: #e8e0d4;
   aspect-ratio: 4 / 3;
-  box-shadow: 0 8px 25px rgba(37, 37, 37, 0.10);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 25px rgba(37, 37, 37, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .gallery-item:hover {
@@ -2166,10 +2169,7 @@ p {
   position: absolute;
   inset: auto 0 0;
   padding: 35px 20px 20px;
-  background: linear-gradient(
-    transparent,
-    rgba(0, 0, 0, 0.82)
-  );
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.82));
   color: #ffffff;
 }
 
@@ -2394,77 +2394,25 @@ p {
     padding: 22px 17px;
   }
 }
-
-/* Empty customer reviews message */
-.reviews-empty-message {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 35px 20px;
-  color: #777;
-  font-size: 16px;
-  line-height: 1.8;
-}
-
-/* Write a Review link */
-.write-review-link-container {
-  text-align: center;
-  margin-top: 40px;
-}
-
 .write-review-link {
   display: inline-block;
-  background: #b58a45;
-  color: #fff;
-  padding: 14px 32px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 14px;
+  padding: 12px 28px;
+  background: #c9a227;
+  color: #ffffff;
+  font-size: 15px;
   font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
   transition: all 0.3s ease;
 }
 
 .write-review-link:hover {
-  background: #967037;
+  background: #a8841f;
+  color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
-
-/* Review page heading */
-.review-page-header {
-  background: #252525;
-  text-align: center;
-  padding: 75px 20px;
-}
-
-.review-page-header h1 {
-  color: #d5ad65;
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.review-page-header p {
-  color: #fff;
-  font-size: 15px;
-  line-height: 1.8;
-  max-width: 650px;
+.write-review-link {
+  display: table;
   margin: 0 auto;
-}
-
-/* Review page form spacing */
-.review-page-header + .testimonials-section {
-  padding-top: 55px;
-}
-
-@media (max-width: 600px) {
-  .review-page-header {
-    padding: 55px 15px;
-  }
-
-  .review-page-header h1 {
-    font-size: 28px;
-  }
-
-  .write-review-link {
-    width: auto;
-    padding: 13px 25px;
-  }
 }

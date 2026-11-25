@@ -1,20 +1,17 @@
-
 function Contact() {
   return (
     <section className="contact-section" id="contact">
       <div className="contact-container">
-
         <div className="contact-heading">
           <span>GET IN TOUCH</span>
           <h2>We'd Love to Hear From You</h2>
           <p>
-            Have a question or planning to visit us?
-            We'd be happy to hear from you.
+            Have a question or planning to visit us? We'd be happy to hear from
+            you.
           </p>
         </div>
 
         <div className="contact-grid">
-
           <div className="contact-card">
             <div className="contact-icon">📍</div>
             <h3>Our Location</h3>
@@ -32,9 +29,7 @@ function Contact() {
             <div className="contact-icon">📞</div>
             <h3>Call Us</h3>
             <p>0765696771</p>
-            <a href="tel:+255765696771">
-              Call Restaurant →
-            </a>
+            <a href="tel:+255765696771">Call Restaurant →</a>
           </div>
 
           <div className="contact-card">
@@ -56,23 +51,20 @@ function Contact() {
             <p>Monday – Sunday</p>
             <strong>8:00 AM – 11:00 PM</strong>
           </div>
-
         </div>
+      </div>
 
-        </div>
-
-        <div className="contact-map">
-          <iframe
-            src="https://www.google.com/maps?q=Sunset+Hall+Mbezi+Beach+Dar+es+Salaam&output=embed"
-            width="100%"
-            height="350"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Restaurant Location"
-          ></iframe>
-    
+      <div className="contact-map">
+        <iframe
+          src="https://www.google.com/maps?q=Sunset+Hall+Mbezi+Beach+Dar+es+Salaam&output=embed"
+          width="100%"
+          height="350"
+          style={{ border: 0 }}
+          loading="lazy"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Restaurant Location"
+        ></iframe>
       </div>
     </section>
   );

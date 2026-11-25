@@ -50,6 +50,7 @@ function Testimonials() {
             We value every customer and every experience.
             Here's what makes dining with us special.
           </p>
+
         </div>
 
         <div className="testimonials-grid">

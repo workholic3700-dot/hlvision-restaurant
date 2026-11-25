@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Hero from "./Hero";
@@ -12,11 +14,39 @@ import Contact from "./Contact";
 import ReviewPage from "./ReviewPage";
 
 function App() {
-  // Separate reservation page
-  if (window.location.pathname === "/reservation") {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (
+      location.pathname === "/reservation" ||
+      location.pathname === "/write-review"
+    ) {
+      return;
+    }
+
+    if (location.hash) {
+      const sectionId = location.hash.replace("#", "");
+
+      requestAnimationFrame(() => {
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
+
+  // Reservation page
+  if (location.pathname === "/reservation") {
     return <ReservationPage />;
   }
-  if (window.location.pathname === "/write-review") return <ReviewPage />;
+
+  // Review page
+  if (location.pathname === "/write-review") {
+    return <ReviewPage />;
+  }
 
   // Main restaurant homepage
   return (

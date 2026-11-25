@@ -29,6 +29,7 @@ type DiscountOffer = {
   active: boolean;
 };
 
+
 type OrderItem = {
   name: string;
   price: number;

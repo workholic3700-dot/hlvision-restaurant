@@ -9,6 +9,7 @@ function Settings() {
     openingHours: "8:00 AM - 11:00 PM"
   });
 
+ 
   const [message, setMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,6 +18,7 @@ function Settings() {
       [e.target.name]: e.target.value
     });
   };
+
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
