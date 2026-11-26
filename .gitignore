@@ -39,3 +39,4 @@ server/.env.*
 *.bak
 # Private restaurant uploads
 server/uploads/
+

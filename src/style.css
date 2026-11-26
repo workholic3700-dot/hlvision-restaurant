@@ -2416,3 +2416,277 @@ p {
   display: table;
   margin: 0 auto;
 }
+
+/* =========================================
+   RESERVATION PAGE
+========================================= */
+
+.reservation-section {
+  width: 100%;
+  min-height: 100vh;
+  padding: 100px 20px;
+  background: #f8f5ef;
+}
+
+.reservation-container {
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.reservation-heading {
+  max-width: 650px;
+  margin: 0 auto 45px;
+  text-align: center;
+}
+
+.reservation-subtitle {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #b18a45;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.reservation-heading h2 {
+  margin: 0 0 15px;
+  color: #252525;
+  font-family: Georgia, serif;
+  font-size: clamp(32px, 5vw, 46px);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.reservation-heading p {
+  margin: 0;
+  color: #777;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* FORM CARD */
+
+.reservation-form {
+  width: 100%;
+  padding: 45px;
+  background: #fff;
+  border: 1px solid #eee8dd;
+  border-radius: 12px;
+  box-shadow: 0 12px 45px rgba(37, 37, 37, 0.06);
+}
+
+/* FORM GROUPS */
+
+.reservation-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.reservation-form-group > label {
+  color: #292929;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.reservation-form input:not([type="checkbox"]):not([type="radio"]),
+.reservation-form select,
+.reservation-form textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 15px;
+  color: #333;
+  background: #fff;
+  border: 1px solid #dedbd4;
+  border-radius: 6px;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.reservation-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.reservation-form input:focus,
+.reservation-form select:focus,
+.reservation-form textarea:focus {
+  border-color: #b18a45;
+  box-shadow: 0 0 0 3px rgba(177, 138, 69, 0.12);
+}
+
+.reservation-form input::placeholder,
+.reservation-form textarea::placeholder {
+  color: #aaa;
+}
+
+/* DATE AND TIME */
+
+.reservation-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+/* RADIO OPTIONS */
+
+.reservation-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.reservation-radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.reservation-radio-group input {
+  width: 16px;
+  height: 16px;
+  accent-color: #b18a45;
+}
+
+/* FOOD PREFERENCES */
+
+.reservation-form-hint {
+  margin: -3px 0 5px;
+  color: #888;
+  font-size: 13px;
+}
+
+.reservation-food-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px;
+  background: #faf9f6;
+  border: 1px solid #eee9df;
+  border-radius: 8px;
+}
+
+.reservation-food-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.reservation-food-options input {
+  width: 17px;
+  height: 17px;
+  accent-color: #b18a45;
+  cursor: pointer;
+}
+
+/* SUCCESS AND ERROR MESSAGES */
+
+.reservation-success-message,
+.reservation-error-message {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.reservation-success-message {
+  color: #24633c;
+  background: #edf7ef;
+  border: 1px solid #cce8d2;
+}
+
+.reservation-error-message {
+  color: #a52b2b;
+  background: #fff0f0;
+  border: 1px solid #f0cccc;
+}
+
+/* SUBMIT BUTTON */
+
+.reservation-submit-button {
+  width: 100%;
+  min-height: 54px;
+  margin-top: 5px;
+  padding: 15px 25px;
+  color: #fff;
+  background: #252525;
+  border: 1px solid #252525;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.reservation-submit-button:hover:not(:disabled) {
+  background: #b18a45;
+  border-color: #b18a45;
+  transform: translateY(-2px);
+}
+
+.reservation-submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 768px) {
+  .reservation-section {
+    padding: 75px 18px;
+  }
+
+  .reservation-form {
+    padding: 30px 24px;
+  }
+
+  .reservation-heading {
+    margin-bottom: 35px;
+  }
+}
+
+@media (max-width: 520px) {
+  .reservation-section {
+    padding: 55px 15px;
+  }
+
+  .reservation-form {
+    padding: 25px 18px;
+  }
+
+  .reservation-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .reservation-food-options {
+    grid-template-columns: 1fr;
+  }
+
+  .reservation-heading h2 {
+    font-size: 32px;
+  }
+
+  .reservation-heading p {
+    font-size: 14px;
+  }
+}

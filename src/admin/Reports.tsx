@@ -4,12 +4,12 @@ const monthlyRevenue = [
   { month: "March", revenue: 950000 },
   { month: "April", revenue: 1400000 },
   { month: "May", revenue: 1250000 },
-  { month: "June", revenue: 1650000 }
+  { month: "June", revenue: 1650000 },
 ];
 
 function Reports() {
   const highestRevenue = Math.max(
-    ...monthlyRevenue.map((item) => item.revenue)
+    ...monthlyRevenue.map((item) => item.revenue),
   );
 
   return (
@@ -56,7 +56,7 @@ function Reports() {
                 <div
                   className="revenue-bar"
                   style={{
-                    height: `${(item.revenue / highestRevenue) * 100}%`
+                    height: `${(item.revenue / highestRevenue) * 100}%`,
                   }}
                   title={`TSh ${item.revenue.toLocaleString("en-US")}`}
                 />

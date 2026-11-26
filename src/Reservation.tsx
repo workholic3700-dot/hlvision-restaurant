@@ -1,89 +1,179 @@
+import { useState, type FormEvent } from "react";
 
-import { useEffect, useState } from "react";
+const foodOptions = [
+  "Chicken",
+  "Beef",
+  "Fish",
+  "Seafood",
+  "Pork",
+  "Vegetarian",
+  "Mixed Dishes",
+  "Other",
+];
 
-type Testimonial = {
-  id: number;
-  customer_name: string;
-  location: string;
-  rating: number;
-  message: string;
-};
+const celebrationOptions = [
+  "Birthday",
+  "Anniversary",
+  "Wedding",
+  "Graduation",
+  "Business Meeting",
+  "Other Celebration",
+];
 
-function Testimonials() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
+function getTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
 
-  const [customerName, setCustomerName] = useState("");
-  const [location, setLocation] = useState("");
-  const [rating, setRating] = useState(5);
-  const [message, setMessage] = useState("");
+  return `${year}-${month}-${day}`;
+}
+
+function Reservation() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [attendees, setAttendees] = useState("2");
+
+  const [celebration, setCelebration] = useState("No");
+  const [celebrationType, setCelebrationType] = useState("");
+
+  const [selectedFoods, setSelectedFoods] = useState<string[]>([]);
+  const [otherFood, setOtherFood] = useState("");
+  const [requests, setRequests] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  // FETCH APPROVED REVIEWS
-  useEffect(() => {
-    async function fetchReviews() {
-      try {
-        const response = await fetch("/api/customer-reviews");
-        const data = await response.json();
+  function handleFoodChange(food: string) {
+    setSelectedFoods((previous) =>
+      previous.includes(food)
+        ? previous.filter((item) => item !== food)
+        : [...previous, food],
+    );
+  }
 
-        if (!response.ok) {
-          throw new Error(data.message || "Unable to load reviews.");
-        }
-
-        setTestimonials(data.reviews || []);
-      } catch (err) {
-        console.error("Customer reviews error:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchReviews();
-  }, []);
-
-  // SUBMIT CUSTOMER REVIEW
-  async function handleReviewSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    setSubmitting(true);
     setSuccess("");
     setError("");
 
+    if (selectedFoods.length === 0) {
+      setError("Please select at least one food preference.");
+      return;
+    }
+
+    if (celebration === "Yes" && !celebrationType) {
+      setError("Please select your celebration type.");
+      return;
+    }
+
+    if (selectedFoods.includes("Other") && !otherFood.trim()) {
+      setError("Please specify your other food preference.");
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
-      const response = await fetch("/api/customer-reviews", {
+      const reservationData = {
+        name: name.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+        date,
+        time,
+        attendees,
+        celebration,
+        celebrationType,
+        selectedFoods,
+        otherFood: otherFood.trim(),
+        requests: requests.trim(),
+      };
+
+      const response = await fetch("/api/reservations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          customer_name: customerName,
-          location,
-          rating,
-          message,
-        }),
+        body: JSON.stringify(reservationData),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Unable to submit your review.");
+      let data;
+
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        throw new Error(
+          `Server returned an invalid response (HTTP ${response.status}).`,
+        );
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || `Reservation failed (HTTP ${response.status}).`,
+        );
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to submit your reservation.");
       }
 
       setSuccess(
-        "Thank you for sharing your experience! Your review is awaiting approval."
+        "Your reservation has been submitted successfully! Opening WhatsApp...",
       );
 
-      setCustomerName("");
-      setLocation("");
-      setRating(5);
-      setMessage("");
+      const whatsappNumber = "255765696771";
 
+      const whatsappMessage = `
+Hello HLVision Restaurant!
+
+I have submitted a table reservation.
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email || "Not provided"}
+Date: ${date}
+Time: ${time}
+Number of Guests: ${attendees}
+Celebration: ${celebration}
+Celebration Type: ${celebration === "Yes" ? celebrationType : "None"}
+Food Preferences: ${selectedFoods.join(", ")}
+Other Food: ${otherFood || "None"}
+Special Requests: ${requests || "None"}
+
+Reservation Reference: ${data.reservation?.id || "Submitted"}
+
+Thank you!
+      `.trim();
+
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+        whatsappMessage,
+      )}`;
+
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
+      setName("");
+      setPhone("");
+      setEmail("");
+      setDate("");
+      setTime("");
+      setAttendees("2");
+      setCelebration("No");
+      setCelebrationType("");
+      setSelectedFoods([]);
+      setOtherFood("");
+      setRequests("");
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Something went wrong."
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.",
       );
     } finally {
       setSubmitting(false);
@@ -91,164 +181,224 @@ function Testimonials() {
   }
 
   return (
-    <section className="testimonials-section" id="testimonials">
-      <div className="testimonials-container">
+    <section className="reservation-section" id="reservation">
+      <div className="reservation-container">
+        <div className="reservation-heading">
+          <span className="reservation-subtitle">BOOK YOUR EXPERIENCE</span>
 
-        <div className="testimonials-heading">
-          <span className="testimonials-subtitle">
-            CUSTOMER EXPERIENCES
-          </span>
-
-          <h2>What Our Customers Say</h2>
+          <h2>Reserve Your Table</h2>
 
           <p>
-            We value every customer and every experience.
-            Here's what makes dining with us special.
+            Plan your dining experience with us. Complete the form below and let
+            us prepare a memorable experience for you.
           </p>
         </div>
 
-        <div className="testimonials-grid">
-
-          {loading ? (
-            <p>Loading customer reviews...</p>
-          ) : testimonials.length === 0 ? (
-            <p>
-              No customer reviews yet. Be the first to share
-              your dining experience!
-            </p>
-          ) : (
-            testimonials.map((testimonial) => (
-              <div className="testimonial-card" key={testimonial.id}>
-
-                <div className="testimonial-stars">
-                  {"★".repeat(testimonial.rating)}
-                  {"☆".repeat(5 - testimonial.rating)}
-                </div>
-
-                <p className="testimonial-message">
-                  "{testimonial.message}"
-                </p>
-
-                <div className="testimonial-customer">
-                  <div className="testimonial-avatar">
-                    {testimonial.customer_name.charAt(0).toUpperCase()}
-                  </div>
-
-                  <div>
-                    <h3>{testimonial.customer_name}</h3>
-                    <span>{testimonial.location}</span>
-                  </div>
-                </div>
-
-              </div>
-            ))
-          )}
-
-        </div>
-
-        {/* WRITE A REVIEW FORM */}
-
-        <div className="write-review-container">
-
-          <div className="write-review-heading">
-            <h3>Share Your Experience</h3>
-
-            <p>
-              Have you dined with us? We'd love to hear
-              what you think!
-            </p>
+        <form className="reservation-form" onSubmit={handleSubmit}>
+          <div className="reservation-form-group">
+            <label htmlFor="reservationName">Full Name *</label>
+            <input
+              id="reservationName"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your full name"
+              maxLength={100}
+              autoComplete="name"
+              required
+            />
           </div>
 
-          <form className="review-form" onSubmit={handleReviewSubmit}>
+          <div className="reservation-form-group">
+            <label htmlFor="reservationPhone">Phone Number *</label>
+            <input
+              id="reservationPhone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter your phone number"
+              maxLength={30}
+              autoComplete="tel"
+              required
+            />
+          </div>
 
-            <div className="review-form-group">
-              <label htmlFor="customerName">Your Name</label>
+          <div className="reservation-form-group">
+            <label htmlFor="reservationEmail">Email Address</label>
+            <input
+              id="reservationEmail"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              maxLength={150}
+              autoComplete="email"
+            />
+          </div>
 
+          <div className="reservation-form-row">
+            <div className="reservation-form-group">
+              <label htmlFor="reservationDate">Reservation Date *</label>
               <input
-                id="customerName"
-                type="text"
-                placeholder="Enter your name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                maxLength={100}
+                id="reservationDate"
+                type="date"
+                value={date}
+                min={getTodayDate()}
+                onChange={(e) => setDate(e.target.value)}
                 required
               />
             </div>
 
-            <div className="review-form-group">
-              <label htmlFor="customerLocation">Your Location</label>
-
+            <div className="reservation-form-group">
+              <label htmlFor="reservationTime">Reservation Time *</label>
               <input
-                id="customerLocation"
-                type="text"
-                placeholder="e.g. Dar es Salaam"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                maxLength={100}
+                id="reservationTime"
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
                 required
               />
             </div>
+          </div>
 
-            <div className="review-form-group">
-              <label>Your Rating</label>
+          <div className="reservation-form-group">
+            <label htmlFor="reservationGuests">Number of Guests *</label>
+            <input
+              id="reservationGuests"
+              type="number"
+              min="1"
+              max="100"
+              value={attendees}
+              onChange={(e) => setAttendees(e.target.value)}
+              required
+            />
+          </div>
 
-              <div className="review-rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    className={star <= rating ? "active" : ""}
-                    onClick={() => setRating(star)}
-                    aria-label={`Rate ${star} out of 5 stars`}
-                    aria-pressed={rating === star}
-                  >
-                    ★
-                  </button>
+          <div className="reservation-form-group">
+            <label>Are you celebrating a special occasion? *</label>
+
+            <div className="reservation-radio-group">
+              <label>
+                <input
+                  type="radio"
+                  name="celebration"
+                  value="Yes"
+                  checked={celebration === "Yes"}
+                  onChange={() => setCelebration("Yes")}
+                />
+                Yes
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="celebration"
+                  value="No"
+                  checked={celebration === "No"}
+                  onChange={() => {
+                    setCelebration("No");
+                    setCelebrationType("");
+                  }}
+                />
+                No
+              </label>
+            </div>
+          </div>
+
+          {celebration === "Yes" && (
+            <div className="reservation-form-group">
+              <label htmlFor="celebrationType">Celebration Type *</label>
+
+              <select
+                id="celebrationType"
+                value={celebrationType}
+                onChange={(e) => setCelebrationType(e.target.value)}
+                required
+              >
+                <option value="">Select celebration type</option>
+
+                {celebrationOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
+          )}
 
-            <div className="review-form-group">
-              <label htmlFor="reviewMessage">Your Review</label>
+          <div className="reservation-form-group">
+            <label>Food Preferences *</label>
 
-              <textarea
-                id="reviewMessage"
-                placeholder="Tell us about your dining experience..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                minLength={10}
-                maxLength={1000}
+            <p className="reservation-form-hint">
+              Select the food options you are interested in.
+            </p>
+
+            <div className="reservation-food-options">
+              {foodOptions.map((food) => (
+                <label key={food}>
+                  <input
+                    type="checkbox"
+                    checked={selectedFoods.includes(food)}
+                    onChange={() => handleFoodChange(food)}
+                  />
+                  {food}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {selectedFoods.includes("Other") && (
+            <div className="reservation-form-group">
+              <label htmlFor="otherFood">Specify Other Food *</label>
+
+              <input
+                id="otherFood"
+                type="text"
+                value={otherFood}
+                onChange={(e) => setOtherFood(e.target.value)}
+                placeholder="Specify your food preference"
+                maxLength={200}
                 required
               />
             </div>
+          )}
 
-            {success && (
-              <div className="review-success-message">
-                {success}
-              </div>
-            )}
+          <div className="reservation-form-group">
+            <label htmlFor="specialRequests">Special Requests</label>
 
-            {error && (
-              <div className="review-error-message">
-                {error}
-              </div>
-            )}
+            <textarea
+              id="specialRequests"
+              value={requests}
+              onChange={(e) => setRequests(e.target.value)}
+              placeholder="Any additional requests or instructions?"
+              maxLength={1000}
+              rows={4}
+            />
+          </div>
 
-            <button
-              type="submit"
-              className="review-submit-button"
-              disabled={submitting}
-            >
-              {submitting ? "Submitting..." : "Submit Your Review"}
-            </button>
+          {success && (
+            <div className="reservation-success-message" role="status">
+              {success}
+            </div>
+          )}
 
-          </form>
+          {error && (
+            <div className="reservation-error-message" role="alert">
+              {error}
+            </div>
+          )}
 
-        </div>
-
+          <button
+            type="submit"
+            className="reservation-submit-button"
+            disabled={submitting}
+          >
+            {submitting ? "Submitting Reservation..." : "Book Your Table"}
+          </button>
+        </form>
       </div>
     </section>
   );
 }
 
-export default Testimonials;
+export default Reservation;

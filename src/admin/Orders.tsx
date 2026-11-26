@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 
 type OrderStatus =
@@ -51,12 +50,9 @@ function Orders() {
     try {
       setError("");
 
-      const response = await fetch(
-        "/api/orders",
-        {
-          credentials: "include",
-        }
-      );
+      const response = await fetch("/api/orders", {
+        credentials: "include",
+      });
 
       const data = await response.json();
 
@@ -75,7 +71,7 @@ function Orders() {
           total: `TSh ${Number(order.total).toLocaleString()}`,
           date: new Date(order.created_at).toLocaleString(),
           status: order.status,
-        })
+        }),
       );
 
       setOrders(formattedOrders);
@@ -83,9 +79,7 @@ function Orders() {
       console.error("Loading orders error:", error);
 
       setError(
-        error instanceof Error
-          ? error.message
-          : "Unable to load orders."
+        error instanceof Error ? error.message : "Unable to load orders.",
       );
     } finally {
       setLoading(false);
@@ -96,47 +90,35 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  async function updateStatus(
-    orderId: number,
-    newStatus: OrderStatus
-  ) {
-    const selectedOrder = orders.find(
-      (order) => order.id === orderId
-    );
+  async function updateStatus(orderId: number, newStatus: OrderStatus) {
+    const selectedOrder = orders.find((order) => order.id === orderId);
 
     if (!selectedOrder || selectedOrder.status === "Completed") {
       return;
     }
 
     try {
-      const response = await fetch(
-        `/api/orders/${orderId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            status: newStatus,
-          }),
-        }
-      );
+      const response = await fetch(`/api/orders/${orderId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Unable to update order status."
-        );
+        throw new Error(data.message || "Unable to update order status.");
       }
 
       setOrders((previousOrders) =>
         previousOrders.map((order) =>
-          order.id === orderId
-            ? { ...order, status: newStatus }
-            : order
-        )
+          order.id === orderId ? { ...order, status: newStatus } : order,
+        ),
       );
 
       setError("");
@@ -146,7 +128,7 @@ function Orders() {
       setError(
         error instanceof Error
           ? error.message
-          : "Unable to update order status."
+          : "Unable to update order status.",
       );
     }
   }
@@ -221,11 +203,7 @@ function Orders() {
           </div>
         </div>
 
-        {error && (
-          <p style={{ color: "red", padding: "12px" }}>
-            {error}
-          </p>
-        )}
+        {error && <p style={{ color: "red", padding: "12px" }}>{error}</p>}
 
         <div className="orders-table-wrapper">
           <table className="orders-table">
@@ -279,10 +257,7 @@ function Orders() {
                         value={order.status}
                         disabled={order.status === "Completed"}
                         onChange={(e) =>
-                          updateStatus(
-                            order.id,
-                            e.target.value as OrderStatus
-                          )
+                          updateStatus(order.id, e.target.value as OrderStatus)
                         }
                       >
                         {[
