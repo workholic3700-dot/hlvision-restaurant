@@ -52,8 +52,12 @@ router.post("/", async (req, res) => {
       });
     }
 
+    // Link reservation to logged-in customer, if authenticated
+    const customerId = req.session.customerId || null;
+
     const result = await pool.query(
       `INSERT INTO reservations (
+        customer_id,
         customer_name,
         phone,
         email,
@@ -66,9 +70,10 @@ router.post("/", async (req, res) => {
         other_food,
         special_requests
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *`,
       [
+        customerId,
         name.trim(),
         phone.trim(),
         email || null,
@@ -95,6 +100,40 @@ router.post("/", async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Unable to submit reservation."
+    });
+  }
+});
+
+
+// CUSTOMER: Get own reservations
+router.get("/my-reservations", async (req, res) => {
+  if (!req.session.customerId) {
+    return res.status(401).json({
+      success: false,
+      message: "Please log in to view your reservations."
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT *
+       FROM reservations
+       WHERE customer_id = $1
+       ORDER BY created_at DESC`,
+      [req.session.customerId]
+    );
+
+    res.json({
+      success: true,
+      reservations: result.rows
+    });
+
+  } catch (error) {
+    console.error("Customer reservations error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Unable to fetch your reservations."
     });
   }
 });
@@ -176,9 +215,7 @@ router.patch("/:id/status", async (req, res) => {
       });
     }
 
-    if (
-      ["Completed", "Cancelled"].includes(existing.rows[0].status)
-    ) {
+    if (["Completed", "Cancelled"].includes(existing.rows[0].status)) {
       return res.status(400).json({
         success: false,
         message: "This reservation can no longer be changed."

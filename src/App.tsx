@@ -13,14 +13,23 @@ import Footer from "./Footer";
 import Contact from "./Contact";
 import ReviewPage from "./ReviewPage";
 
+import CustomerRegisterPage from "./CustomerRegisterPage";
+import CustomerLoginPage from "./CustomerLoginPage";
+import CustomerDashboardPage from "./CustomerDashboardPage";
+
 function App() {
   const location = useLocation();
 
   useEffect(() => {
-    if (
-      location.pathname === "/reservation" ||
-      location.pathname === "/write-review"
-    ) {
+    const standalonePages = [
+      "/reservation",
+      "/write-review",
+      "/customer-register",
+      "/customer-login",
+      "/customer-dashboard",
+    ];
+
+    if (standalonePages.includes(location.pathname)) {
       return;
     }
 
@@ -46,6 +55,21 @@ function App() {
   // Review page
   if (location.pathname === "/write-review") {
     return <ReviewPage />;
+  }
+
+  // Customer registration page
+  if (location.pathname === "/customer-register") {
+    return <CustomerRegisterPage />;
+  }
+
+  // Customer login page
+  if (location.pathname === "/customer-login") {
+    return <CustomerLoginPage />;
+  }
+
+  // Customer dashboard
+  if (location.pathname === "/customer-dashboard") {
+    return <CustomerDashboardPage />;
   }
 
   // Main restaurant homepage

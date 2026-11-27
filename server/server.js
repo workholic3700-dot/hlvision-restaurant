@@ -49,6 +49,7 @@ app.use(
 
 // API ROUTES
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/customer-auth", require("./routes/customerAuth"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/reservations", require("./routes/reservations"));
 app.use("/api/meals", require("./routes/meals"));
